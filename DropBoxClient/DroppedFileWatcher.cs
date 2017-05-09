@@ -6,9 +6,9 @@ namespace DropBoxClient
     {
         private string path;
 
-        private FileWatcher fileWatcher;
+        private ObservableSystemFilesCollectionsProvider fileWatcher;
         private readonly Subject<SubjectInfo> subject = new Subject<SubjectInfo>();
-        public DroppedFileWatcher(FileWatcher _fileWatcher, string _path)
+        public DroppedFileWatcher(ObservableSystemFilesCollectionsProvider _fileWatcher, string _path)
         {
             path = _path;
             fileWatcher = _fileWatcher;

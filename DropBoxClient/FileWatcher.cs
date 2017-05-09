@@ -6,15 +6,18 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 namespace DropBoxClient
 {
-    public class FileWatcher : IDisposable
+    public class ObservableSystemFilesCollectionsProvider : IDisposable
     {
         private FileSystemWatcher fileSystemWatcher;
         public IObservable<FileSystemEventArgs> Created { get; set; }
-        public FileWatcher(FileSystemWatcher _fileSystemWatcher)
+        public ObservableSystemFilesCollectionsProvider(FileSystemWatcher _fileSystemWatcher)
         {
             
             fileSystemWatcher = _fileSystemWatcher;
-            //Created = Obser
+            Created = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>
+                    (target => fileSystemWatcher.Created += target,
+                    eventName => fileSystemWatcher.Created -= eventName)
+                .Select(x => x.EventArgs);
         }
         public void Dispose()
         {
