@@ -12,13 +12,24 @@ namespace DropBoxClient
         public IObservable<FileSystemEventArgs> Created { get; set; }
         public ObservableSystemFilesCollectionsProvider(FileSystemWatcher _fileSystemWatcher)
         {
-            
+                
             fileSystemWatcher = _fileSystemWatcher;
             Created = Observable.FromEventPattern<FileSystemEventHandler, FileSystemEventArgs>
-                    (target => fileSystemWatcher.Created += target,
-                    eventName => fileSystemWatcher.Created -= eventName)
-                .Select(x => x.EventArgs);
+                    (target => fileSystemWatcher.Created += target, eventName => fileSystemWatcher.Created -= eventName)
+                    .Select(x => x.EventArgs);
+
         }
+
+        public void StartProviding()
+        {
+            fileSystemWatcher.EnableRaisingEvents = true;
+        }
+
+        public void StopProviding()
+        {
+            fileSystemWatcher.EnableRaisingEvents = false;
+        }
+        
         public void Dispose()
         {
             fileSystemWatcher.Dispose();
